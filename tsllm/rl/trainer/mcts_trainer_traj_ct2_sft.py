@@ -38,17 +38,7 @@ class AccelerateMCTSTrainer(BaseMCTSTrainer):
     def __init__(self, config, **kwargs):
         super().__init__(config, **kwargs)
 
-        self.model = self.setup_model()
-        # run in pure_bf16
-        self.model = self.model.to(self.accelerator.device, torch.bfloat16)
-        self.opt = self.setup_optimizer()
-        (
-            self.model,
-            self.opt,
-        ) = self.accelerator.prepare(
-            self.model,
-            self.opt,
-        )
+
 
         self.train_q_ds, self.test_q_ds = get_env_datasets(
             self.config.train.env_name, **self.config.train.task_dataset_kwargs
@@ -110,7 +100,11 @@ class AccelerateMCTSTrainer(BaseMCTSTrainer):
                 is_few_shot=self.config.env.is_few_shot,
                 add_eos_token=True,
             )
+            flag = True
             for sft_data in sft_data_list:
+                if flag:
+                    print("sft_data is", sft_data)
+                    flag = False
                 self.add_traj(
                     sft_data["idx"],
                     query_str=sft_data["query_str"],
@@ -123,6 +117,17 @@ class AccelerateMCTSTrainer(BaseMCTSTrainer):
                 )
             )
 
+        self.model = self.setup_model()
+        # run in pure_bf16
+        self.model = self.model.to(self.accelerator.device, torch.bfloat16)
+        self.opt = self.setup_optimizer()
+        (
+            self.model,
+            self.opt,
+        ) = self.accelerator.prepare(
+            self.model,
+            self.opt,
+        )
         self.scheduler = self.setup_scheduler()
         self.scheduler = self.accelerator.prepare(self.scheduler)
         self.setup_tracker()
@@ -307,6 +312,7 @@ class AccelerateMCTSTrainer(BaseMCTSTrainer):
         forward_time = -time.time()
         # onpolicy data loss
         sftbatch = next(train_sft_data_iter)
+        print(sftbatch)
         loss, stats = self.loss_fn(sftbatch)
         forward_time += time.time()
         backward_time = -time.time()
