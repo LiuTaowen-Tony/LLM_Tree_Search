@@ -13,13 +13,13 @@ config = {
         "padding_side": "right",
     },
     "optimizer": {
-        "name": "adamw",
+        "name": "adamw8bit",
         "kwargs": dict(lr=2.0e-5, betas=(0.9, 0.999), eps=1.0e-8, weight_decay=0.0),
     },
     "scheduler": {"name": "cosine_warmup", "kwargs": dict(warmup_ratio=0.03)},
     "train": {
         "pre_onpolicy_datapath": "../../tsllm/offline_rl/gsm8k_data/processed/gsm8k_train_cot_sample_sft_k100_merged_dedup_sample17x3.jsonl",
-        "pre_onpolicy_datapath_train_test": "../../tsllm/offline_rl/gsm8k_data/processed/gsm8k_train_cot_sample_offline_sft_k100_ep3_dedup_sample17_train_test_sample_3.jsonl",
+        "pre_onpolicy_datapath_train_test": "../../tsllm/offline_rl/gsm8k_data/processed/gsm8k_train_cot_sample_offline_sft_k100_ep2_dedup_sample17_train_test_sample_3.jsonl",
         "env_name": "gsm8k",
         "epochs": 3,  # this is the epoch for the whole sampling/training process
         "train_epoch": 1,  # this is the epoch for training process after each sampling

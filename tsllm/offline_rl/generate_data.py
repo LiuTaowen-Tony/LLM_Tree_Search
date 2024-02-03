@@ -93,6 +93,7 @@ def main(args):
     if not args.output_path.parent.exists():
         args.output_path.parent.mkdir(parents=True)
 
+    print(args.ct2_dir)
     ct2_generator = ctranslate2.Generator(
         args.ct2_dir, device="cuda", device_index=args.gpu_ids, compute_type="bfloat16"
     )
@@ -157,4 +158,6 @@ if __name__ == "__main__":
     parser.add_argument("--max_batch_size", type=int, default=50)
     parser.add_argument("--num_workers", type=int, default=8)
     args = parser.parse_args()
+    args.ct2_dir = "../../train_mcts_scripts/gsm8k/tmp_for_check/ct2_model"
+    print(args.__dict__)
     main(args)

@@ -167,3 +167,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .vscode/
+train_mcts_scripts/gsm8k/tmp_for_check/
+tsllm/offline_rl/gsm8k_data/cot_sample/
+tsllm/offline_rl/gsm8k_data/processed/

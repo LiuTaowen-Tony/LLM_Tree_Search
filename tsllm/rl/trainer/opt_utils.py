@@ -4,6 +4,7 @@ import math
 from typing import Optional
 import torch
 from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, LambdaLR
+import bitsandbytes as bnb
 
 
 class OptimizerName(str, Enum):
@@ -11,6 +12,8 @@ class OptimizerName(str, Enum):
 
     ADAM: str = "adam"
     ADAMW: str = "adamw"
+    ADAM_8BIT_BNB: str = "adam8bit"
+    ADAMW_8BIT_BNB: str = "adamw8bit"
     # ADAM_8BIT_BNB: str = "adam_8bit_bnb"
     # ADAMW_8BIT_BNB: str = "adamw_8bit_bnb"
     SGD: str = "sgd"
@@ -27,6 +30,12 @@ def get_optimizer_class(name: OptimizerName):
         return torch.optim.Adam
     if name == OptimizerName.ADAMW:
         return torch.optim.AdamW
+    if name == OptimizerName.ADAM_8BIT_BNB:
+        print("using bnb adam")
+        return bnb.optim.Adam8bit
+    if name == OptimizerName.ADAMW_8BIT_BNB:
+        print("using bnb adamw")
+        return bnb.optim.AdamW8bit
 
     if name == OptimizerName.SGD.value:
         return torch.optim.SGD
